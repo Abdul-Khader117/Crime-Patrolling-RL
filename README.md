@@ -86,7 +86,3 @@ A responsive and interactive React application for monitoring the agent.
 3.  **Action Space**: The agent can move in cardinal directions (Up, Down, Left, Right).
 4.  **Reward Function**: The agent receives positive rewards for patrolling high-crime areas and negative rewards (penalties) for stepping out of bounds or into invalid zones (e.g., water bodies).
 5.  **Training**: The Q-learning agent explores the environment, updating its Q-table based on the Bellman equation. Over time, it learns optimal paths to maximize its cumulative reward.
-
-## 📄 License
-
-This project is licensed under the MIT License.
