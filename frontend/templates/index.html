@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Crime Patrol</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+    <style>
+        body { font-family: Arial; text-align: center; }
+        #map { height: 500px; width: 80%; margin: auto; }
+        button { margin: 5px; padding: 10px; }
+    </style>
+</head>
+<body>
+
+<h2>🚓 Smart Crime Patrol System</h2>
+
+<div id="map"></div>
+
+<br>
+
+<button onclick="move(0)">⬆️</button><br>
+<button onclick="move(2)">⬅️</button>
+<button onclick="move(1)">⬇️</button>
+<button onclick="move(3)">➡️</button>
+
+<br><br>
+
+<button onclick="runAI()">🤖 AI Patrol</button>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+let map = L.map('map').setView([41.85, -87.65], 10);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+let marker = null;
+
+function updateMap(position) {
+    let lat = 41.85 + position[0]*0.01;
+    let lon = -87.65 + position[1]*0.01;
+
+    if (marker) map.removeLayer(marker);
+
+    marker = L.marker([lat, lon]).addTo(map);
+}
+
+async function move(action) {
+    let res = await fetch("/move", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({action})
+    });
+
+    let data = await res.json();
+    updateMap(data.position);
+}
+
+async function runAI() {
+    for (let i = 0; i < 30; i++) {
+        let res = await fetch("/ai", {method: "POST"});
+        let data = await res.json();
+        updateMap(data.position);
+
+        await new Promise(r => setTimeout(r, 200));
+    }
+}
+</script>
+
+</body>
+</html>
